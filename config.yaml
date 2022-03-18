@@ -1,0 +1,5 @@
+#log_level: Debug Warn Error
+log_level: Debug
+log_path: ./log
+user: root
+pwd: 123456
