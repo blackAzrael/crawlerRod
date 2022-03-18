@@ -7,10 +7,12 @@ import (
 )
 
 type conf struct {
-	LogLevel string `yaml:"log_level"`
-	LogPath  string `yaml:"log_path"`
-	User     string `yaml:"user"`
-	Pwd      string `yaml:"pwd"`
+	LogLevel  string `yaml:"log_level"`
+	LogPath   string `yaml:"log_path"`
+	LogCaller bool   `yaml:"log_caller"`
+	User      string `yaml:"user"`
+	Pwd       string `yaml:"pwd"`
+	Proxy     string `yaml:"proxy"`
 }
 
 func (c *conf) GetConf() *conf {

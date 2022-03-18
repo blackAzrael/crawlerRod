@@ -1,5 +1,7 @@
-#log_level: Debug Warn Error
+#log_level: Debug Info Warn Error
 log_level: Debug
 log_path: ./log
+log_caller: false
 user: root
 pwd: 123456
+proxy: socks5://127.0.0.1:1080

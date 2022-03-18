@@ -8,7 +8,6 @@ import (
 	"path/filepath"
 )
 
-
 const (
 	red    = 31
 	yellow = 33
@@ -27,10 +26,12 @@ var logLevelMap = map[string]logrus.Level{
 	"Fatal": logrus.FatalLevel,
 	//"Panic":           logrus.PanicLevel,
 }
+
 type MyFormatter struct {
 	DisableColors bool
 }
-func (m *MyFormatter) Format(entry *logrus.Entry) ([]byte, error){
+
+func (m *MyFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 	var b *bytes.Buffer
 	if entry.Buffer != nil {
 		b = entry.Buffer
@@ -58,31 +59,35 @@ func (m *MyFormatter) Format(entry *logrus.Entry) ([]byte, error){
 	if entry.HasCaller() {
 		fName := filepath.Base(entry.Caller.File)
 		newLog = fmt.Sprintf("[%s] [\u001B[%dm%s\u001B[0m] [%s:%d %s] %s\n",
-			timestamp, levelColor,entry.Level, fName, entry.Caller.Line, entry.Caller.Function, entry.Message)
-	} else{
-		newLog = fmt.Sprintf("[%s] \u001B[%dm%s\u001B[0m %s\n", timestamp, levelColor,entry.Level, entry.Message)
+			timestamp, levelColor, entry.Level, fName, entry.Caller.Line, entry.Caller.Function, entry.Message)
+	} else {
+		newLog = fmt.Sprintf("[%s] [\u001B[%dm%s\u001B[0m] %s\n", timestamp, levelColor, entry.Level, entry.Message)
 	}
 
 	b.WriteString(newLog)
 	return b.Bytes(), nil
 }
 
-
-
 var Logger *logrus.Logger
 
 func init() {
 	Logger = logrus.New()
 	level := config.Config.LogLevel
+	if level == "" {
+		level = "Debug"
+	}
+
 	Logger.SetLevel(logLevelMap[level])
 	//Logger.SetFormatter(&logrus.TextFormatter{
 	//	ForceQuote:true,    //键值对加引号
 	//	TimestampFormat:"2006-01-02 15:04:05",  //时间格式
 	//	FullTimestamp:true,
 	//})
+	caller := config.Config.LogCaller
+	if caller {
+		Logger.SetReportCaller(true)
+	}
 
-	Logger.SetReportCaller(true)
 	Logger.SetFormatter(&MyFormatter{})
-
 
 }
